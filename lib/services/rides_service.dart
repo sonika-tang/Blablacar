@@ -17,9 +17,21 @@ class RidesService {
   }
 
   static List<Ride> _filterBySeatRequested(int seatRequested) {
-    return 
+    return allRides
+        .where((ride) => ride.availableSeats >= seatRequested)
+        .toList();
   }
 
-  static List<Ride> _filterBy({Location? departure, int? seatRequestd}) {
+  static List<Ride> filterBy({Location? departure, int? seatRequested}) {
+    return allRides.where((ride) {
+      if (departure != null && ride.departureLocation != departure) {
+        return false;
+      }
+      if (seatRequested != null && ride.availableSeats < seatRequested) {
+        return false;
+      }
+
+      return true;
+    }).toList();
   }
 }
