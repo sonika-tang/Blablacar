@@ -1,3 +1,5 @@
+import 'package:blabla/utils/animations_util.dart';
+
 import '/ui/widgets/actions/bla_button.dart';
 import '/ui/widgets/display/bla_divider.dart';
 import 'package:flutter/material.dart';
@@ -61,17 +63,65 @@ class _RidePrefFormState extends State<RidePrefForm> {
   // Handle events
   // ----------------------------------
 
-  void onDeparturePressed() async {
+void onDeparturePressed() async {
+    // 1- Select a location
+    Location? selectedLocation = await Navigator.of(context).push<Location>(
+      AnimationUtils.createBottomToTopRoute(
+        BlaLocationPicker(initLocation: departure),
+      ),
+    );
 
+    // 2- Update the form
+    if (selectedLocation != null) {
+      setState(() {
+        departure = selectedLocation;
+      });
+    }
   }
 
   void onArrivalPressed() async {
-    
+    // 1- Select a location
+    Location? selectedLocation = await Navigator.of(context).push<Location>(
+      AnimationUtils.createBottomToTopRoute(
+        BlaLocationPicker(initLocation: arrival),
+      ),
+    );
+
+    // 2- Update the form
+    if (selectedLocation != null) {
+      setState(() {
+        arrival = selectedLocation;
+      });
+    }
   }
 
-  // TODO-3 - Go to the rides_screen with the selected ride pref
   void onSubmit() {
+    // Only submit if both locations are selected
+    if (departure != null && arrival != null) {
+      final ridePref = RidePref(
+        departure: departure!,
+        departureDate: departureDate,
+        arrival: arrival!,
+        requestedSeats: requestedSeats,
+      );
 
+      // Save the preference to the service
+      RidePrefsService.selectedRidePref = ridePref;
+
+      // TODO: Navigate to RidesScreen with the selected ridePref
+      print('Selected RidePref: $ridePref');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Searching rides: $ridePref')));
+    } else {
+      // Show error if locations are not selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select both departure and arrival locations'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   // TODO-2  - WE need to be able to switch as soon as 1 least 1 location is set
