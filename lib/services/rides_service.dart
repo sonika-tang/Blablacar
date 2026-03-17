@@ -1,7 +1,6 @@
-import 'package:blabla/model/ride/locations.dart';
-
 import '../data/dummy_data.dart';
 import '../model/ride/ride.dart';
+import '../model/ride_pref/ride_pref.dart';
 
 ////
 ///   This service handles:
@@ -10,28 +9,18 @@ import '../model/ride/ride.dart';
 class RidesService {
   static List<Ride> allRides = fakeRides;
 
-  static List<Ride> _filterByDeparture(Location departure) {
+ 
+  ///
+  ///  Return the relevant rides, given the passenger preferences
+  ///
+  static List<Ride> getRidesFor(RidePreference preferences) {
     return allRides
-        .where((ride) => ride.departureLocation == departure)
+        .where(
+          (ride) =>
+              ride.departureLocation == preferences.departure &&
+              ride.arrivalLocation == preferences.arrival &&
+              ride.availableSeats >= preferences.requestedSeats
+        )
         .toList();
-  }
-
-  static List<Ride> _filterBySeatRequested(int seatRequested) {
-    return allRides
-        .where((ride) => ride.availableSeats >= seatRequested)
-        .toList();
-  }
-
-  static List<Ride> filterBy({Location? departure, int? seatRequested}) {
-    return allRides.where((ride) {
-      if (departure != null && ride.departureLocation != departure) {
-        return false;
-      }
-      if (seatRequested != null && ride.availableSeats < seatRequested) {
-        return false;
-      }
-
-      return true;
-    }).toList();
   }
 }
