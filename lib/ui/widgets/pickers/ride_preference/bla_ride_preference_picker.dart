@@ -1,16 +1,16 @@
+import 'package:blabla/ui/state/ride_preference_state.dart';
 import 'package:blabla/ui/widgets/buttons/bla_button.dart';
 import 'package:blabla/ui/widgets/display/bla_divider.dart';
 import 'package:flutter/material.dart';
 
-import '../../../model/ride/locations.dart';
-import '../../../model/ride_pref/ride_pref.dart';
-import '../../../services/ride_prefs_service.dart';
-import '../../../utils/animations_util.dart';
-import '../../../utils/date_time_utils.dart';
-import '../../theme/theme.dart';
-import '../buttons/bla_icon_button.dart';
-import 'bla_location_picker.dart';
-import 'bla_seat_picker.dart';
+import '../../../../model/ride/locations.dart';
+import '../../../../model/ride_pref/ride_pref.dart';
+import '../../../../utils/animations_util.dart';
+import '../../../../utils/date_time_utils.dart';
+import '../../../theme/theme.dart';
+import '../../buttons/bla_icon_button.dart';
+import '../location/bla_location_picker.dart';
+import '../seat/bla_seat_picker.dart';
 
 ///
 /// A  RidePreference Picker is a view to pick a RidePreference:
@@ -114,7 +114,7 @@ class _BlaRidePreferencePickerState extends State<BlaRidePreferencePicker> {
       AnimationUtils.createRightToLeftRoute(
         BlaSeatPicker(
           initSeats: requestedSeats,
-          maxSeat: RidePrefsService.maxAllowedSeats,
+          maxSeat: RidePreferenceState.maxAllowedSeats,
         ),
       ),
     );
